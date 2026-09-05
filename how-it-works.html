@@ -118,7 +118,9 @@
       noisy heuristic guesses.</li>
   </ul>
   <p>Evidence stays verbatim (extracted directly from the docs), owners still come from git history,
-  and findings are marked <code>method: heuristic</code> so you always know how they were produced.</p>
+  and findings are marked <code>method: heuristic</code> so you always know how they were produced.
+  Confidence is shown on every surface — Problems-view squiggles, the findings tree, HTML and
+  markdown reports, CLI output, and issue bodies — so you can always judge how sure a finding is.</p>
 
   <p><strong>Model quality note:</strong> Docgrity's prompts demand strict JSON with verbatim evidence.
   Hosted frontier models handle this reliably; small local models (&lt;8B) fail validation more often.
