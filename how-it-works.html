@@ -102,6 +102,24 @@
   <p>Summary: <strong>Copilot (keyless) in the editor · Ollama (keyless) everywhere · BYO key for hosted
   models in CI and the CLI.</strong></p>
 
+  <h3 id="no-agent">No-agent mode — no AI at all</h3>
+  <p>Every surface can also scan with <strong>pure algorithms</strong> — no model, no Copilot, no keys,
+  fully offline. Extension: set <code>docgrity.engine</code> to <code>no-agent</code>. CLI:
+  <code>docgrity scan --provider none</code>. Action: <code>provider: none</code>.</p>
+  <ul>
+    <li><strong>Duplicates</strong> — verbatim shared-block detection plus TF-IDF similarity. Catches
+      copy-paste duplication with measured confidence (the actual overlap ratio); paraphrased
+      duplication needs AI.</li>
+    <li><strong>Open questions</strong> — explicit markers (<code>TODO</code>, <code>TBD</code>,
+      <code>FIXME</code>, <code>???</code>, "open question"…). Deterministic, so confidence is high.</li>
+    <li><strong>Contradictions</strong> — <em>require AI intelligence</em>: deciding that two documents
+      make conflicting claims is semantic understanding, not pattern matching. In no-agent mode this
+      check is <strong>skipped and clearly noted</strong> in the report — Docgrity never substitutes
+      noisy heuristic guesses.</li>
+  </ul>
+  <p>Evidence stays verbatim (extracted directly from the docs), owners still come from git history,
+  and findings are marked <code>method: heuristic</code> so you always know how they were produced.</p>
+
   <p><strong>Model quality note:</strong> Docgrity's prompts demand strict JSON with verbatim evidence.
   Hosted frontier models handle this reliably; small local models (&lt;8B) fail validation more often.
   Failed responses are <em>rejected safely</em> — you get fewer findings, never corrupted ones.
