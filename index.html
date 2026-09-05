@@ -42,7 +42,7 @@
     <a class="cta" href="https://marketplace.visualstudio.com/items?itemName=ujjavala.docgrity" rel="noopener">Install from the VS Code Marketplace — Free</a>
     <a class="cta ghost" href="how-it-works.html">How it works</a>
     <a class="cta ghost" href="privacy.html">Privacy</a>
-    <p style="margin-top:14px;color:var(--muted);font-size:.9rem">Uses your own GitHub Copilot subscription (or a local model). No API keys, no servers, nothing leaves your editor except your own model calls.</p>
+    <p style="margin-top:14px;color:var(--muted);font-size:.9rem">Uses your own GitHub Copilot subscription (or a local model). No API keys, no servers, nothing leaves your editor except your own model calls. Prefer the terminal? <a href="#cli">There's a CLI too</a>: <code>npm i -g docgrity</code>.</p>
   </header>
 
   <section>
@@ -51,7 +51,7 @@
       <li><strong>Install:</strong> open the Extensions view in VS Code (<kbd>⇧⌘X</kbd>), search <strong>Docgrity</strong>, click <em>Install</em> — or run <code>code --install-extension ujjavala.docgrity</code>.</li>
       <li><strong>Sign in to Copilot</strong> if you aren't already — or pick a different model (Claude, GPT, or a fully local Ollama model) with <kbd>⇧⌘P</kbd> → <em>Docgrity: Select AI model</em>. See <a href="how-it-works.html#models">model setup</a> for all options, including remote models via Cloudflare Tunnel.</li>
       <li><strong>Open a repo</strong> that contains markdown docs (READMEs, ADRs, runbooks, guides).</li>
-      <li><strong>Scan:</strong> <kbd>⇧⌘P</kbd> → <em>Docgrity: Scan repository docs</em>. Findings appear in the Docgrity view in the activity bar, with squiggles on the evidence — or click <em>Open report</em> for a shareable markdown report.</li>
+      <li><strong>Scan:</strong> <kbd>⇧⌘P</kbd> → <em>Docgrity: Scan repository docs</em>. Findings appear in the Docgrity view in the activity bar, with squiggles on the evidence — or click <em>Open report</em> for an interactive dashboard with severity filters, evidence, owners and clickable doc paths.</li>
       <li><strong>Act:</strong> right-click a finding → <em>Raise GitHub issue</em>. Docgrity drafts the issue with evidence and a suggested next step; <strong>nothing is posted until you approve</strong>.</li>
     </ol>
   </section>
@@ -84,6 +84,14 @@
       <div class="card"><h3><code>docgrity.model.vendor / family</code></h3><p>Pick the language model — or just run <em>Docgrity: Select AI model</em>. Copilot, Claude, GPT, or a local Ollama model for fully local scanning. <a href="how-it-works.html#models">All options</a>.</p></div>
       <div class="card"><h3><code>docgrity.thresholds.*</code></h3><p>Minimum confidence per finding type. Raise them for fewer, surer findings.</p></div>
       <div class="card"><h3><code>docgrity.maxFiles / maxPairs</code></h3><p>Scan caps (200 files / 25 pairs by default) to keep scans fast and model usage modest.</p></div>
+    </div>
+  </section>
+
+  <section id="cli">
+    <h2>Also: a CLI and a GitHub Action</h2>
+    <div class="grid">
+      <div class="card"><h3>CLI — <code>npm i -g docgrity</code></h3><p>Run <code>docgrity scan --open</code> in any repo for an interactive HTML dashboard: findings by type, severity filters, evidence, doc links and potential owners. <strong>Read-only by design</strong> — the CLI never posts anything. Same flags as the extension's settings: <code>--checks</code>, <code>--thresholds</code>, <code>--provider ollama|gemini|openai|anthropic</code>. Defaults to a local Ollama model — fully private. <code>docgrity --help</code> for everything.</p></div>
+      <div class="card"><h3>GitHub Action — continuous enforcement</h3><p>Add <code>uses: ujjavala/docgrity-vscode/action@main</code> to CI for scheduled scans with a job-summary report — and, opt-in, deduplicated GitHub issues that auto-close when findings are resolved. <a href="https://github.com/ujjavala/docgrity-vscode/tree/main/action" rel="noopener">Action docs</a>.</p></div>
     </div>
   </section>
 
