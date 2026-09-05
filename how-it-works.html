@@ -87,6 +87,21 @@
     <li><strong>Other provider extensions.</strong> Any VS Code extension that registers language models works: set <code>docgrity.model.vendor</code> to that provider's vendor id, or empty for "any available model".</li>
   </ol>
 
+  <h3 id="providers-cli">Models outside the editor — CLI and GitHub Action</h3>
+  <p>Copilot models are only available <em>inside VS Code</em> (there is no Copilot API key for
+  terminals or CI). The CLI and Action use direct providers instead:</p>
+  <ul>
+    <li><strong><code>ollama</code> (CLI default)</strong> — local or tunnelled, no key, fully private.</li>
+    <li><strong><code>anthropic</code> / <code>openai</code> / <code>gemini</code></strong> — bring your own API key
+      (defaults: <code>claude-3-5-haiku-latest</code>, <code>gpt-4o-mini</code>, <code>gemini-flash</code>). These are the
+      vendors' direct APIs — a separate key from your Copilot subscription. In the Action, pass it as
+      <code>api_key: ${{ secrets.DOCGRITY_API_KEY }}</code>.</li>
+    <li><strong><code>github-models</code></strong> — <em>being retired by GitHub.</em> If your Action runs fail with
+      HTTP 410 (<code>github_models_retirement</code>), switch <code>provider</code> to one of the options above.</li>
+  </ul>
+  <p>Summary: <strong>Copilot (keyless) in the editor · Ollama (keyless) everywhere · BYO key for hosted
+  models in CI and the CLI.</strong></p>
+
   <p><strong>Model quality note:</strong> Docgrity's prompts demand strict JSON with verbatim evidence.
   Hosted frontier models handle this reliably; small local models (&lt;8B) fail validation more often.
   Failed responses are <em>rejected safely</em> — you get fewer findings, never corrupted ones.
