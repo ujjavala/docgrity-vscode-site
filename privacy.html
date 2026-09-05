@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy &amp; Data Statement — Docgrity for VS Code</title>
+<link rel="icon" type="image/png" href="logo.png">
+<style>
+  :root{--blue:#1558bc;--ink:#172b4d;--muted:#5e6c84;--bg:#fafbfc}
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;margin:0}
+  .wrap{max-width:760px;margin:0 auto;padding:48px 24px 72px}
+  h1{letter-spacing:-.02em}
+  h2{margin-top:2em;font-size:1.25rem}
+  .updated{color:var(--muted);font-size:.9rem}
+  table{border-collapse:collapse;width:100%;font-size:.92rem;margin:12px 0}
+  th,td{border:1px solid #ebecf0;padding:8px 10px;text-align:left;vertical-align:top;background:#fff}
+  th{background:#f4f5f7}
+  code{background:#f4f5f7;padding:1px 5px;border-radius:4px;font-size:.9em}
+  a{color:var(--blue)}
+  .top{font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="top"><a href="index.html">← Docgrity for VS Code home</a></p>
+  <h1>Docgrity for VS Code — Privacy Policy &amp; Data Statement</h1>
+  <p class="updated">Last updated: 5 September 2026</p>
+
+  <h2>Who we are</h2>
+  <p>Docgrity for VS Code is published by Ujjavala Singh ("we"). Contact: see the support
+  details on the <a href="https://marketplace.visualstudio.com/items?itemName=ujjavala.docgrity">VS Code Marketplace listing</a> or GitHub profile.</p>
+
+  <h2>The short version</h2>
+  <ul>
+    <li>The extension runs <strong>entirely inside your VS Code</strong>. We operate
+      <strong>no servers</strong> and can never access your repositories, findings, or accounts.</li>
+    <li>Document text is sent to <strong>exactly one place: the language model you use through
+      VS Code's built-in language-model API</strong> — normally your own GitHub Copilot
+      subscription, or a local model (e.g. Ollama) if you configure one. That processing happens
+      under <strong>your</strong> agreement with that provider (GitHub, or nobody if local).</li>
+    <li>We receive <strong>no data at all</strong> — no content, no telemetry, no analytics, no crash reports.</li>
+  </ul>
+
+  <h2>What data the extension processes</h2>
+  <table>
+    <tr><th>Data</th><th>Where it lives</th><th>Purpose</th></tr>
+    <tr><td>Markdown file contents from the open workspace</td><td>In memory during a scan only</td><td>scanning for duplicates / contradictions / open questions</td></tr>
+    <tr><td>TF-IDF term statistics</td><td>In memory during a scan only</td><td>candidate-pair selection (fully local, no AI)</td></tr>
+    <tr><td>Findings, evidence quotes, model + prompt version</td><td>VS Code <code>workspaceState</code> (local, per-workspace)</td><td>the findings view, diagnostics, issue drafting</td></tr>
+    <tr><td>Git author names of scanned files</td><td>VS Code <code>workspaceState</code>, inside findings</td><td>potential-owner inference (labelled <em>potential</em>)</td></tr>
+    <tr><td>GitHub access token</td><td>VS Code's authentication system (we never store it)</td><td>creating the GitHub issue you explicitly approved</td></tr>
+    <tr><td>Settings (globs, thresholds, model choice)</td><td>VS Code settings (local or your Settings Sync)</td><td>configuration</td></tr>
+  </table>
+  <p>Everything above stays on your machine (or in your own VS Code Settings Sync). Clearing
+  findings (<em>Docgrity: Clear findings</em>) or uninstalling the extension removes stored findings.</p>
+
+  <h2>What leaves your machine</h2>
+  <ul>
+    <li><strong>Language-model requests</strong> containing the text of the documents being
+      assessed — sent via VS Code's <code>vscode.lm</code> API to the model you selected
+      (default: your GitHub Copilot subscription; optionally a fully local model, in which case
+      nothing leaves your machine at all).</li>
+    <li><strong>One GitHub API request</strong> (<code>api.github.com</code>) when — and only
+      when — you approve raising an issue, containing the issue title, body and labels you
+      previewed.</li>
+  </ul>
+  <p>There are no other network calls. No content, metadata, or usage data is ever sent to us.</p>
+
+  <h2>What we collect</h2>
+  <p>Nothing. There is no backend, no telemetry endpoint, and no account.</p>
+
+  <h2>Permissions the extension uses</h2>
+  <ul>
+    <li><strong>Workspace file read</strong> — markdown files matching your include glob, to scan them.</li>
+    <li><strong>Language model access</strong> (<code>vscode.lm</code>) — VS Code prompts you for consent on first use.</li>
+    <li><strong>GitHub authentication</strong> (<code>repo</code> scope) — requested only when you raise an issue, via VS Code's standard GitHub sign-in.</li>
+    <li><strong>Read-only git commands</strong> (<code>git log</code>, <code>git remote get-url</code>) — for potential-owner and repo inference.</li>
+  </ul>
+
+  <h2>Security measures</h2>
+  <ul>
+    <li>Document content is treated as untrusted input; all model output is schema-validated in code and rejected if invalid.</li>
+    <li>Evidence excerpts are verified verbatim against your files before a finding is recorded.</li>
+    <li>No action is taken without explicit human approval — issue drafts are always previewed first.</li>
+    <li>Tokens are never logged; the Docgrity output channel never contains document content or credentials.</li>
+    <li>Git subprocesses run without a shell, with fixed argument lists and timeouts.</li>
+  </ul>
+
+  <h2>Data subject rights &amp; retention</h2>
+  <p>The extension stores no personal data outside your machine. Git author names inside
+  findings are removed when you clear findings or uninstall. Issues you create on GitHub are
+  governed by GitHub's terms and your repository's settings, and are fully under your control.</p>
+
+  <h2>Changes</h2>
+  <p>We'll update this page when the extension's data handling changes, with the date above.</p>
+</div>
+</body>
+</html>

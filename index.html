@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docgrity for VS Code — Doc Integrity for Repos</title>
+<link rel="icon" type="image/png" href="logo.png">
+<meta name="description" content="Find where your repository's markdown docs disagree with themselves — duplicates, contradictions and open questions — right inside VS Code. Powered by your own Copilot subscription.">
+<style>
+  :root{--blue:#1558bc;--blue2:#0b3d91;--teal:#16a394;--ink:#172b4d;--muted:#5e6c84;--bg:#fafbfc}
+  *{margin:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6}
+  .wrap{max-width:880px;margin:0 auto;padding:0 24px}
+  header{padding:72px 0 48px;text-align:center}
+  header img{width:96px;height:96px;margin-bottom:16px;border-radius:20px}
+  h1{font-size:2.4rem;letter-spacing:-.02em}
+  .tag{font-size:1.25rem;color:var(--muted);max-width:640px;margin:12px auto 28px}
+  .cta{display:inline-block;background:var(--blue);color:#fff;text-decoration:none;font-weight:600;padding:12px 28px;border-radius:8px}
+  .cta:hover{background:var(--blue2)}
+  .cta.ghost{background:transparent;color:var(--blue);border:2px solid var(--blue);margin-left:12px}
+  section{padding:40px 0}
+  h2{font-size:1.5rem;margin-bottom:16px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+  .card{background:#fff;border:1px solid #ebecf0;border-radius:10px;padding:20px}
+  .card h3{font-size:1.05rem;margin-bottom:6px}
+  .card p{color:var(--muted);font-size:.95rem}
+  .pill{display:inline-block;background:#e6f7f4;color:var(--teal);font-weight:600;font-size:.8rem;padding:2px 10px;border-radius:99px;margin-bottom:8px}
+  ol.steps{background:#fff;border:1px solid #ebecf0;border-radius:10px;padding:24px 24px 24px 44px;max-width:720px;margin:0 auto}
+  ol.steps li{margin:10px 0}
+  code{background:#f4f5f7;padding:1px 6px;border-radius:4px;font-size:.9em}
+  kbd{background:#172b4d;color:#fff;padding:1px 6px;border-radius:4px;font-size:.85em}
+  footer{padding:40px 0 56px;color:var(--muted);font-size:.9rem;text-align:center;border-top:1px solid #ebecf0;margin-top:40px}
+  footer a{color:var(--blue)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="logo.png" alt="Docgrity logo">
+    <h1>Docgrity for VS Code</h1>
+    <p class="tag">Find where your repository's markdown docs disagree with themselves — duplicates, contradictions and open questions, with evidence — and raise GitHub issues to fix them.</p>
+    <a class="cta" href="https://marketplace.visualstudio.com/items?itemName=ujjavala.docgrity" rel="noopener">Install from the VS Code Marketplace — Free</a>
+    <a class="cta ghost" href="how-it-works.html">How it works</a>
+    <a class="cta ghost" href="privacy.html">Privacy</a>
+    <p style="margin-top:14px;color:var(--muted);font-size:.9rem">Uses your own GitHub Copilot subscription (or a local model). No API keys, no servers, nothing leaves your editor except your own model calls.</p>
+  </header>
+
+  <section>
+    <h2>Setup — under a minute</h2>
+    <ol class="steps">
+      <li><strong>Install:</strong> open the Extensions view in VS Code (<kbd>⇧⌘X</kbd>), search <strong>Docgrity</strong>, click <em>Install</em> — or run <code>code --install-extension ujjavala.docgrity</code>.</li>
+      <li><strong>Sign in to Copilot</strong> if you aren't already (the extension uses your Copilot models via VS Code's built-in language-model API). Prefer a local model? See <a href="how-it-works.html#local-models">local models</a>.</li>
+      <li><strong>Open a repo</strong> that contains markdown docs (READMEs, ADRs, runbooks, guides).</li>
+      <li><strong>Scan:</strong> <kbd>⇧⌘P</kbd> → <em>Docgrity: Scan repository docs</em>. Findings appear in the Docgrity view in the activity bar, with squiggles on the evidence.</li>
+      <li><strong>Act:</strong> right-click a finding → <em>Raise GitHub issue</em>. Docgrity drafts the issue with evidence and a suggested next step; <strong>nothing is posted until you approve</strong>.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>What it finds</h2>
+    <div class="grid">
+      <div class="card"><span class="pill">Duplicates</span><h3>Docs that should be one</h3><p>Near-identical documents detected semantically, with a recommended action.</p></div>
+      <div class="card"><span class="pill">Contradictions</span><h3>Facts that don't agree</h3><p>Conflicting dates, owners, numbers and processes — with the conflicting claims quoted side by side.</p></div>
+      <div class="card"><span class="pill">Open questions</span><h3>Questions nobody answered</h3><p>Unanswered questions and stale TODOs living inside your docs, surfaced with potential owners from git history.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Why it's different</h2>
+    <div class="grid">
+      <div class="card"><h3>Zero infrastructure</h3><p>Runs 100% inside VS Code. No vendor servers, no accounts, no telemetry.</p></div>
+      <div class="card"><h3>Your Copilot, your models</h3><p>All AI calls go through VS Code's language-model API using your own Copilot subscription — or a local model (e.g. Ollama).</p></div>
+      <div class="card"><h3>Evidence, always</h3><p>Every finding quotes the exact text it's based on, verified verbatim against your files. Ownership is always labelled <em>potential</em>, never asserted.</p></div>
+      <div class="card"><h3>Humans approve actions</h3><p>The extension never posts anything on its own. Every GitHub issue is shown to you as a draft first.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Settings that matter</h2>
+    <div class="grid">
+      <div class="card"><h3><code>docgrity.include</code></h3><p>Glob for docs to scan. Default <code>**/*.md</code> — markdown only, by design.</p></div>
+      <div class="card"><h3><code>docgrity.model.vendor / family</code></h3><p>Pick the language model. Defaults to Copilot; point it at an Ollama model for fully local scanning.</p></div>
+      <div class="card"><h3><code>docgrity.thresholds.*</code></h3><p>Minimum confidence per finding type. Raise them for fewer, surer findings.</p></div>
+      <div class="card"><h3><code>docgrity.maxFiles / maxPairs</code></h3><p>Scan caps (200 files / 25 pairs by default) to keep scans fast and model usage modest.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Docgrity for VS Code · <a href="how-it-works.html">How it works</a> · <a href="privacy.html">Privacy policy &amp; data statement</a> · <a href="terms.html">Terms of use</a> · <a href="https://ujjavala.github.io/docgrity-site/">Docgrity for Confluence</a> · <a href="https://github.com/ujjavala">GitHub</a></p>
+  </footer>
+</div>
+</body>
+</html>

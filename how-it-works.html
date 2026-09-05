@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How it works — Docgrity for VS Code</title>
+<link rel="icon" type="image/png" href="logo.png">
+<style>
+  :root{--blue:#1558bc;--teal:#16a394;--ink:#172b4d;--muted:#5e6c84;--bg:#fafbfc}
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;margin:0}
+  .wrap{max-width:760px;margin:0 auto;padding:48px 24px 72px}
+  h1{letter-spacing:-.02em}
+  h2{margin-top:2em;font-size:1.25rem}
+  .updated{color:var(--muted);font-size:.9rem}
+  code{background:#f4f5f7;padding:1px 5px;border-radius:4px;font-size:.9em}
+  pre{background:#172b4d;color:#e6edf7;padding:14px 16px;border-radius:8px;overflow-x:auto;font-size:.88em}
+  a{color:var(--blue)}
+  .top{font-size:.9rem}
+  ol li,ul li{margin:6px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="top"><a href="index.html">← Docgrity for VS Code home</a></p>
+  <h1>How Docgrity for VS Code works</h1>
+  <p class="updated">Last updated: 5 September 2026</p>
+
+  <h2>The pipeline</h2>
+  <ol>
+    <li><strong>Collect.</strong> Docgrity gathers your repo's markdown files (<code>**/*.md</code> by default, excluding <code>node_modules</code>, build output etc., capped at 200 files). Trivial files are skipped.</li>
+    <li><strong>Pair locally.</strong> Candidate document pairs are selected with local TF-IDF cosine similarity — deterministic, instant, and free. No AI is used at this stage; code blocks are ignored so shared snippets don't cause false pairing.</li>
+    <li><strong>Assess with your model.</strong> Only the top pairs (25 by default) are sent to the language model — via VS Code's built-in <code>vscode.lm</code> API, meaning your own Copilot subscription or a local model. Each pair is checked for duplication and contradiction; each document is checked for open questions.</li>
+    <li><strong>Validate everything.</strong> Model responses must be valid JSON matching a strict schema — anything else is rejected, never partially trusted. Every evidence excerpt is verified <em>verbatim</em> against your files; findings with unverifiable evidence are dropped (hallucination guard).</li>
+    <li><strong>Show findings.</strong> Findings appear in the Docgrity activity-bar view and as diagnostics (squiggles) on the exact evidence text. Each records the model and prompt version that produced it.</li>
+    <li><strong>Act — with approval.</strong> Right-click a finding → <em>Raise GitHub issue</em>. Docgrity drafts a title and body (evidence, suggested next step, potential owner from <code>git log</code>) and shows it to you in a modal. Only after you click <em>Create issue</em> does it post, using VS Code's built-in GitHub sign-in, labelled <code>docgrity</code> / <code>docgrity:&lt;type&gt;</code>.</li>
+  </ol>
+
+  <h2>Potential owners</h2>
+  <p>Docgrity suggests who might fix a finding by looking at the last git author of each involved file. This is always labelled <em>potential</em> — inferred, never asserted. It never assigns issues automatically.</p>
+
+  <h2 id="local-models">Using a local model (Ollama / llama)</h2>
+  <p>Docgrity talks to whatever model VS Code's language-model API exposes:</p>
+  <ol>
+    <li><strong>Via Copilot's “Manage models”:</strong> in Copilot Chat, add your Ollama model under <em>Manage models</em>. It registers under the <code>copilot</code> vendor, so Docgrity picks it up with default settings. Optionally set <code>docgrity.model.family</code> to e.g. <code>llama3.1</code> to force it.</li>
+    <li><strong>Via a provider extension:</strong> set <code>docgrity.model.vendor</code> to that provider's vendor id, or empty for any available model.</li>
+  </ol>
+  <p>Note: the prompts demand strict JSON. Strong models handle this reliably; small local models may fail validation more often — failed responses are rejected safely, never mis-recorded.</p>
+
+  <h2>Cost &amp; performance</h2>
+  <ul>
+    <li>Pair selection is 100% local — the model is only called for the top pairs and per-doc open-question checks.</li>
+    <li>Caps (<code>docgrity.maxFiles</code>, <code>docgrity.maxPairs</code>) keep a scan to a bounded number of model calls.</li>
+    <li>Scans are cancellable; partial results are kept.</li>
+  </ul>
+
+  <h2>Security posture</h2>
+  <ul>
+    <li>Document content is treated as <strong>untrusted input</strong>: it cannot override the agent instructions, and all model output is schema-validated in code.</li>
+    <li>Evidence is verified verbatim against source files before a finding is recorded.</li>
+    <li>GitHub tokens come from VS Code's authentication API, are used only for the issue-creation request you approved, and are never logged or stored.</li>
+    <li>Git commands are read-only (<code>git log</code>, <code>git remote get-url</code>), executed without a shell.</li>
+    <li>No telemetry, no vendor servers, no data collection. See the <a href="privacy.html">privacy policy</a>.</li>
+  </ul>
+
+  <h2>Troubleshooting</h2>
+  <ul>
+    <li><strong>“No language model available”</strong> — sign in to GitHub Copilot, or configure <code>docgrity.model.vendor</code>/<code>family</code> for a local model.</li>
+    <li><strong>No findings</strong> — your docs may simply agree with each other; try lowering <code>docgrity.thresholds.*</code>, or check the corpus caps.</li>
+    <li><strong>Logs</strong> — Output panel → <em>Docgrity</em> channel. Use <em>Developer: Set Log Level</em> for more detail. Logs never contain document content or tokens.</li>
+  </ul>
+
+  <p style="margin-top:2em"><a href="index.html">← Back to home</a></p>
+</div>
+</body>
+</html>
