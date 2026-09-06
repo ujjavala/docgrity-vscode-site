@@ -6,98 +6,111 @@
 <title>Docgrity for VS Code — Doc Integrity for Repos</title>
 <link rel="icon" type="image/png" href="logo.png">
 <meta name="description" content="Find where your repository's markdown docs disagree with themselves — duplicates, contradictions and open questions — right inside VS Code. Powered by your own Copilot subscription.">
-<style>
-  :root{--blue:#1558bc;--blue2:#0b3d91;--teal:#16a394;--ink:#172b4d;--muted:#5e6c84;--bg:#fafbfc}
-  *{margin:0;box-sizing:border-box}
-  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6}
-  .wrap{max-width:880px;margin:0 auto;padding:0 24px}
-  header{padding:72px 0 48px;text-align:center}
-  header img{width:96px;height:96px;margin-bottom:16px;border-radius:20px}
-  h1{font-size:2.4rem;letter-spacing:-.02em}
-  .tag{font-size:1.25rem;color:var(--muted);max-width:640px;margin:12px auto 28px}
-  .cta{display:inline-block;background:var(--blue);color:#fff;text-decoration:none;font-weight:600;padding:12px 28px;border-radius:8px}
-  .cta:hover{background:var(--blue2)}
-  .cta.ghost{background:transparent;color:var(--blue);border:2px solid var(--blue);margin-left:12px}
-  section{padding:40px 0}
-  h2{font-size:1.5rem;margin-bottom:16px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
-  .card{background:#fff;border:1px solid #ebecf0;border-radius:10px;padding:20px}
-  .card h3{font-size:1.05rem;margin-bottom:6px}
-  .card p{color:var(--muted);font-size:.95rem}
-  .pill{display:inline-block;background:#e6f7f4;color:var(--teal);font-weight:600;font-size:.8rem;padding:2px 10px;border-radius:99px;margin-bottom:8px}
-  ol.steps{background:#fff;border:1px solid #ebecf0;border-radius:10px;padding:24px 24px 24px 44px;max-width:720px;margin:0 auto}
-  ol.steps li{margin:10px 0}
-  code{background:#f4f5f7;padding:1px 6px;border-radius:4px;font-size:.9em}
-  kbd{background:#172b4d;color:#fff;padding:1px 6px;border-radius:4px;font-size:.85em}
-  footer{padding:40px 0 56px;color:var(--muted);font-size:.9rem;text-align:center;border-top:1px solid #ebecf0;margin-top:40px}
-  footer a{color:var(--blue)}
-</style>
+<link rel="stylesheet" href="theme.css">
 </head>
 <body>
-<div class="wrap">
-  <header>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <linearGradient id="docgrity-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#2dd4bf"/><stop offset="50%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#8b7bf7"/>
+  </linearGradient>
+</defs></svg>
+<header>
+  <div class="wrap">
     <img src="logo.png" alt="Docgrity logo">
-    <h1>Docgrity for VS Code</h1>
-    <p class="tag">Find where your repository's markdown docs disagree with themselves — duplicates, contradictions and open questions, with evidence — and raise GitHub issues to fix them.</p>
-    <a class="cta" href="https://marketplace.visualstudio.com/items?itemName=ujjavala.docgrity" rel="noopener">Install from the VS Code Marketplace — Free</a>
+    <p class="kicker">docs · integrity · vs code</p>
+    <h1>Your docs are lying<br>to each other. <span class="g">Catch them.</span></h1>
+    <p class="tag">Docgrity finds duplicates, contradictions and open questions across your repo's markdown — with verbatim evidence — and drafts the GitHub issues to fix them.</p>
+    <a class="cta" href="https://marketplace.visualstudio.com/items?itemName=ujjavala.docgrity" rel="noopener">Install Free →</a>
     <a class="cta ghost" href="how-it-works.html">How it works</a>
-    <a class="cta ghost" href="privacy.html">Privacy</a>
-    <p style="margin-top:14px;color:var(--muted);font-size:.9rem">Uses your own GitHub Copilot subscription (or a local model). No API keys, no servers, nothing leaves your editor except your own model calls. Prefer the terminal? <a href="#cli">There's a CLI too</a>: <code>npm i -g docgrity</code>.</p>
-  </header>
-
-  <section>
-    <h2>Setup — under a minute</h2>
-    <ol class="steps">
-      <li><strong>Install:</strong> open the Extensions view in VS Code (<kbd>⇧⌘X</kbd>), search <strong>Docgrity</strong>, click <em>Install</em> — or run <code>code --install-extension ujjavala.docgrity</code>.</li>
-      <li><strong>Sign in to Copilot</strong> if you aren't already — or pick a different model (Claude, GPT, or a fully local Ollama model) with <kbd>⇧⌘P</kbd> → <em>Docgrity: Select AI model</em>. See <a href="how-it-works.html#models">model setup</a> for all options, including remote models via Cloudflare Tunnel.</li>
-      <li><strong>Open a repo</strong> that contains markdown docs (READMEs, ADRs, runbooks, guides).</li>
-      <li><strong>Scan:</strong> <kbd>⇧⌘P</kbd> → <em>Docgrity: Scan repository docs</em>. Findings appear in the Docgrity view in the activity bar, with squiggles on the evidence — or click <em>Open report</em> for an interactive dashboard with severity filters, evidence, owners and clickable doc paths.</li>
-      <li><strong>Act:</strong> right-click a finding → <em>Raise GitHub issue</em>. Docgrity drafts the issue with evidence and a suggested next step; <strong>nothing is posted until you approve</strong>.</li>
-    </ol>
-  </section>
+    <div class="badges">
+      <span class="badge"><b>0</b> servers · <b>0</b> accounts · <b>0</b> telemetry</span>
+      <span class="badge">your Copilot · local Ollama · <b>or no AI at all</b></span>
+      <span class="badge">npm i -g docgrity</span>
+    </div>
+  </div>
+</header>
+<div class="wrap">
 
   <section>
     <h2>What it finds</h2>
+    <p class="sub">Three kinds of doc rot, each with verbatim evidence and a confidence score.</p>
     <div class="grid">
-      <div class="card"><span class="pill">Duplicates</span><h3>Docs that should be one</h3><p>Near-identical documents detected semantically, with a recommended action.</p></div>
-      <div class="card"><span class="pill">Contradictions</span><h3>Facts that don't agree</h3><p>Conflicting dates, owners, numbers and processes — with the conflicting claims quoted side by side.</p></div>
-      <div class="card"><span class="pill">Open questions</span><h3>Questions nobody answered</h3><p>Unanswered questions and stale TODOs living inside your docs, surfaced with potential owners from git history.</p></div>
+      <div class="card find"><span class="conf">84%</span><span class="pill"><i data-lucide="copy" class="lucide-inline"></i>Duplicates</span><h3>Docs that should be one</h3><p>Near-identical documents, detected semantically or by verbatim shared blocks.</p></div>
+      <div class="card find contradiction"><span class="conf">91%</span><span class="pill red"><i data-lucide="zap" class="lucide-inline"></i>Contradictions</span><h3>Facts that don't agree</h3><p>Conflicting dates, owners and numbers — quoted side by side.</p></div>
+      <div class="card find openq"><span class="conf">95%</span><span class="pill amber">Open questions</span><h3>Questions nobody answered</h3><p>Stale TODOs and unanswered questions, with potential owners from git history.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>From finding to fix — real issues, drafted for you</h2>
+    <p class="sub">Right-click a finding → <em>Raise GitHub issue</em>. Labelled, deduplicated, evidence-backed — and <strong>nothing is posted until you approve</strong>.</p>
+    <figure class="shot">
+      <div class="inner">
+        <img src="issues-screenshot.png" alt="GitHub issues raised by Docgrity: a duplicate finding between deployment-guide.md and release-process.md, and an open-question finding in architecture-notes.md, each labelled docgrity">
+        <figcaption>Actual issues raised by Docgrity — auto-labelled, fingerprint-deduplicated, auto-closed when resolved.</figcaption>
+      </div>
+    </figure>
+  </section>
+
+  <section>
+    <h2>Up and running in a minute</h2>
+    <div class="steps-row">
+      <div class="step"><strong>Install</strong><span>Search <em>Docgrity</em> in Extensions (<kbd>⇧⌘X</kbd>)</span></div>
+      <div class="step"><strong>Pick a model</strong><span>Copilot, Claude, GPT, local Ollama — or <a href="how-it-works.html#no-agent">none at all</a></span></div>
+      <div class="step"><strong>Scan</strong><span><kbd>⇧⌘P</kbd> → <em>Docgrity: Scan repository docs</em></span></div>
+      <div class="step"><strong>Act</strong><span>Review the dashboard, raise issues — you approve every post</span></div>
+    </div>
+  </section>
+
+  <section id="cli">
+    <h2>Terminal person? CI person?</h2>
+    <p class="sub">Same engine as the extension — a read-only CLI and a GitHub Action.</p>
+    <div class="term">
+      <div class="bar"><i></i><i></i><i></i></div>
+      <div class="body">
+<span class="p">$</span> npm i -g docgrity<br>
+<span class="p">$</span> docgrity scan --provider none --open   <span class="c"># no-agent: no model, no keys</span><br>
+<span class="c">Corpus: 5 markdown docs; assessing 9 candidate pairs (heuristic, no LLM)</span><br>
+<span class="ok">2 finding(s) across 5 docs.</span><br>
+<span class="ok">&nbsp;&nbsp;[MEDIUM] duplicate — 84% confidence — deployment-guide.md + release-process.md</span><br>
+<span class="ok">&nbsp;&nbsp;[MEDIUM] open_question — 95% confidence — architecture-notes.md</span>
+      </div>
+    </div>
+    <div class="grid" style="margin-top:20px">
+      <div class="card"><h3>CLI — read-only by design</h3><p><code>docgrity scan --open</code> gives an interactive HTML dashboard. Providers: <code>none</code>, <code>ollama</code>, <code>anthropic</code>, <code>openai</code>, <code>gemini</code>. Never posts anything.</p></div>
+      <div class="card"><h3>GitHub Action — continuous</h3><p><code>uses: ujjavala/docgrity-vscode/action@main</code> for scheduled scans, job-summary reports and opt-in deduplicated issues. <a href="https://github.com/ujjavala/docgrity-vscode/tree/main/action" rel="noopener">Docs</a>.</p></div>
     </div>
   </section>
 
   <section>
     <h2>Why it's different</h2>
     <div class="grid">
-      <div class="card"><h3>Zero infrastructure</h3><p>Runs 100% inside VS Code. No vendor servers, no accounts, no telemetry.</p></div>
-      <div class="card"><h3>Your Copilot, your models</h3><p>All AI calls go through VS Code's language-model API using your own Copilot subscription — or a local model (e.g. Ollama).</p></div>
-      <div class="card"><h3>Evidence, always</h3><p>Every finding quotes the exact text it's based on, verified verbatim against your files. Ownership is always labelled <em>potential</em>, never asserted.</p></div>
-      <div class="card"><h3>Humans approve actions</h3><p>The extension never posts anything on its own. Every GitHub issue is shown to you as a draft first.</p></div>
+      <div class="card"><i data-lucide="server-off" class="lucide"></i><h3>Zero infrastructure</h3><p>100% inside VS Code. No servers, no accounts, no telemetry.</p></div>
+      <div class="card"><i data-lucide="file-search" class="lucide"></i><h3>Evidence, always</h3><p>Every finding quotes exact text, verified verbatim against your files.</p></div>
+      <div class="card"><i data-lucide="sparkles" class="lucide"></i><h3>AI optional</h3><p>Full scans with your Copilot or Ollama — or pure-algorithm <a href="how-it-works.html#no-agent">no-agent mode</a>, fully offline.</p></div>
+      <div class="card"><i data-lucide="user-check" class="lucide"></i><h3>Humans approve</h3><p>Every issue is a draft first. Nothing is ever posted on its own.</p></div>
     </div>
   </section>
 
   <section>
-    <h2>Settings that matter</h2>
-    <div class="grid">
-      <div class="card"><h3><code>docgrity.mode</code></h3><p><code>report-and-issue</code> (default) or <code>report-only</code> — which hides and blocks issue creation entirely, guaranteeing the extension never posts anywhere. Set per-workspace to keep client repos read-only.</p></div>
-      <div class="card"><h3><code>docgrity.checks.*</code></h3><p>Toggle each check independently — duplicates, contradictions, open questions — in any combination. Fewer checks, faster scans.</p></div>
-      <div class="card"><h3><code>docgrity.include / exclude</code></h3><p>Globs for docs to scan. Default <code>**/*.md</code> — markdown only, by design. <code>node_modules</code>, build output, and git-ignored files are always excluded.</p></div>
-      <div class="card"><h3><code>docgrity.model.vendor / family</code></h3><p>Pick the language model — or just run <em>Docgrity: Select AI model</em>. Copilot, Claude, GPT, or a local Ollama model for fully local scanning. <a href="how-it-works.html#models">All options</a>.</p></div>
-      <div class="card"><h3><code>docgrity.thresholds.*</code></h3><p>Minimum confidence per finding type. Raise them for fewer, surer findings.</p></div>
-      <div class="card"><h3><code>docgrity.maxFiles / maxPairs</code></h3><p>Scan caps (200 files / 25 pairs by default) to keep scans fast and model usage modest.</p></div>
-    </div>
-  </section>
-
-  <section id="cli">
-    <h2>Also: a CLI and a GitHub Action</h2>
-    <div class="grid">
-      <div class="card"><h3>CLI — <code>npm i -g docgrity</code></h3><p>Run <code>docgrity scan --open</code> in any repo for an interactive HTML dashboard: findings by type, severity filters, evidence, doc links and potential owners. <strong>Read-only by design</strong> — the CLI never posts anything. Same flags as the extension's settings: <code>--checks</code>, <code>--thresholds</code>, <code>--provider ollama|gemini|openai|anthropic</code>. Defaults to a local Ollama model — fully private. <code>docgrity --help</code> for everything.</p></div>
-      <div class="card"><h3>GitHub Action — continuous enforcement</h3><p>Add <code>uses: ujjavala/docgrity-vscode/action@main</code> to CI for scheduled scans with a job-summary report — and, opt-in, deduplicated GitHub issues that auto-close when findings are resolved. <a href="https://github.com/ujjavala/docgrity-vscode/tree/main/action" rel="noopener">Action docs</a>.</p></div>
-    </div>
+    <details class="settings">
+      <summary>Settings that matter</summary>
+      <div class="grid">
+        <div class="card"><h3><code>docgrity.mode</code></h3><p><code>report-and-issue</code> or <code>report-only</code> — the latter blocks issue creation entirely.</p></div>
+        <div class="card"><h3><code>docgrity.engine</code></h3><p><code>ai</code> or <code>no-agent</code> — pure algorithms, no model, contradictions skipped.</p></div>
+        <div class="card"><h3><code>docgrity.checks.*</code></h3><p>Toggle duplicates, contradictions and open questions independently.</p></div>
+        <div class="card"><h3><code>docgrity.include / exclude</code></h3><p>Globs for docs to scan (default <code>**/*.md</code>); ignored files always excluded.</p></div>
+        <div class="card"><h3><code>docgrity.model.*</code></h3><p>Pick the model — or run <em>Docgrity: Select AI model</em>. <a href="how-it-works.html#models">All options</a>.</p></div>
+        <div class="card"><h3><code>docgrity.thresholds.*</code></h3><p>Minimum confidence per finding type — raise for fewer, surer findings.</p></div>
+      </div>
+    </details>
   </section>
 
   <footer>
     <p>Docgrity for VS Code · <a href="how-it-works.html">How it works</a> · <a href="privacy.html">Privacy policy &amp; data statement</a> · <a href="terms.html">Terms of use</a> · <a href="https://ujjavala.github.io/docgrity-site/">Docgrity for Confluence</a> · <a href="https://github.com/ujjavala">GitHub</a></p>
   </footer>
 </div>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>lucide.createIcons();</script>
 </body>
 </html>

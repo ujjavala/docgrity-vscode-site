@@ -5,153 +5,73 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>How it works — Docgrity for VS Code</title>
 <link rel="icon" type="image/png" href="logo.png">
-<style>
-  :root{--blue:#1558bc;--teal:#16a394;--ink:#172b4d;--muted:#5e6c84;--bg:#fafbfc}
-  *{box-sizing:border-box}
-  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;margin:0}
-  .wrap{max-width:760px;margin:0 auto;padding:48px 24px 72px}
-  h1{letter-spacing:-.02em}
-  h2{margin-top:2em;font-size:1.25rem}
-  .updated{color:var(--muted);font-size:.9rem}
-  code{background:#f4f5f7;padding:1px 5px;border-radius:4px;font-size:.9em}
-  pre{background:#172b4d;color:#e6edf7;padding:14px 16px;border-radius:8px;overflow-x:auto;font-size:.88em}
-  a{color:var(--blue)}
-  .top{font-size:.9rem}
-  ol li,ul li{margin:6px 0}
-</style>
+<link rel="stylesheet" href="theme.css">
 </head>
 <body>
-<div class="wrap">
-  <p class="top"><a href="index.html">← Docgrity for VS Code home</a></p>
-  <h1>How Docgrity for VS Code works</h1>
-  <p class="updated">Last updated: 5 September 2026</p>
+<div class="docs">
+  <p class="top"><a href="index.html">← docgrity home</a></p>
+  <h1>How it <span class="g">works</span></h1>
+  <p class="updated">Last updated: 6 September 2026</p>
 
   <h2>The pipeline</h2>
   <ol>
-    <li><strong>Collect.</strong> Docgrity gathers your repo's markdown files (<code>**/*.md</code> by default, capped at 200 files). <code>node_modules</code>, build output, and vendor directories are <em>always</em> excluded, and anything in your <code>.gitignore</code> is skipped too. Trivial files are dropped.</li>
-    <li><strong>Pair locally.</strong> Candidate document pairs are selected with local TF-IDF cosine similarity — deterministic, instant, and free. No AI is used at this stage; code blocks are ignored so shared snippets don't cause false pairing.</li>
-    <li><strong>Assess with your model.</strong> Only the top pairs (25 by default) are sent to the language model — via VS Code's built-in <code>vscode.lm</code> API, meaning your own Copilot subscription or a local model. When both pairwise checks are enabled, duplication and contradiction are assessed in a <em>single combined call per pair</em>; open-question checks run only on documents that show open-question signals (TODO/TBD, placeholders, unanswered questions). Assessments run four at a time.</li>
-    <li><strong>Validate everything.</strong> Model responses must be valid JSON matching a strict schema — anything else is rejected, never partially trusted. Every evidence excerpt is verified <em>verbatim</em> against your files; findings with unverifiable evidence are dropped (hallucination guard).</li>
-    <li><strong>Show findings.</strong> Findings appear in the Docgrity activity-bar view and as diagnostics (squiggles) on the exact evidence text — the scan notification's <em>View findings</em> button takes you straight there. <em>Docgrity: Open findings report</em> generates a shareable markdown report of the whole scan. Each finding records the model and prompt version that produced it.</li>
-    <li><strong>Act — with approval.</strong> Right-click a finding → <em>Raise GitHub issue</em>. Docgrity drafts a title and body (evidence, suggested next step, potential owner from <code>git log</code>) and shows it to you in a modal. Only after you click <em>Create issue</em> does it post, using VS Code's built-in GitHub sign-in, labelled <code>docgrity</code> / <code>docgrity:&lt;type&gt;</code>.</li>
+    <li><strong>Collect</strong> — repo markdown (<code>**/*.md</code>, capped at 200 files). <code>node_modules</code>, build output and git-ignored files always excluded.</li>
+    <li><strong>Pair locally</strong> — candidate pairs via local TF-IDF cosine similarity. Deterministic, instant, free — no AI at this stage.</li>
+    <li><strong>Assess</strong> — only the top pairs (25 default) hit the model via <code>vscode.lm</code> (your Copilot or a local model). Duplicate + contradiction share one call per pair; open-question checks pre-filter for signals first.</li>
+    <li><strong>Validate</strong> — strict-JSON schema or rejected; every evidence excerpt verified <em>verbatim</em> against your files (hallucination guard).</li>
+    <li><strong>Show</strong> — activity-bar view, Problems-panel squiggles on the exact evidence, an interactive dashboard, and a markdown report. Every finding records model, prompt version and confidence.</li>
+    <li><strong>Act, with approval</strong> — right-click → <em>Raise GitHub issue</em>. A drafted title/body (evidence, next step, potential owner from <code>git log</code>) is shown in a modal; nothing posts until you click <em>Create issue</em>.</li>
   </ol>
 
-  <h2>Modes: report-only vs report + issues</h2>
-  <p>The <code>docgrity.mode</code> setting controls what the extension is allowed to do:</p>
+  <h2>Modes &amp; checks</h2>
   <ul>
-    <li><strong><code>report-and-issue</code> (default)</strong> — scan, review findings, and raise GitHub issues, each previewed and human-approved before posting.</li>
-    <li><strong><code>report-only</code></strong> — scan and review only. The <em>Raise GitHub issue</em> action is hidden from menus and blocked at the command level, so the extension is guaranteed to never post anywhere. Useful for client repositories, compliance-sensitive environments, or exploratory reading.</li>
-  </ul>
-  <p>Because it's a normal VS Code setting, you can set <code>report-only</code> globally in user
-  settings and override to <code>report-and-issue</code> per-workspace (in
-  <code>.vscode/settings.json</code>) only in repos where you want to act.</p>
-
-  <h2>Choosing which checks run</h2>
-  <p>Each check is an independent toggle — run any combination, with any model, in either mode:</p>
-  <ul>
-    <li><code>docgrity.checks.duplicates</code> — pairwise duplicate detection (default on)</li>
-    <li><code>docgrity.checks.contradictions</code> — pairwise contradiction detection (default on)</li>
-    <li><code>docgrity.checks.openQuestions</code> — per-document unresolved-question detection (default on)</li>
-  </ul>
-  <p>Disabling checks also speeds up scans: pair selection is skipped entirely when both
-  pairwise checks are off, and only enabled checks cost model calls.</p>
-
-  <h2>Viewing results</h2>
-  <ul>
-    <li><strong>Docgrity view</strong> — the Docgrity icon in the activity bar. Findings are grouped by type; clicking a finding jumps to its first evidence excerpt in the file.</li>
-    <li><strong>Problems panel</strong> — every finding is also a diagnostic on the affected files.</li>
-    <li><strong>Dashboard</strong> — run <em>Docgrity: Open findings dashboard</em> (or click <em>Open report</em> on the scan notification) for an interactive report: stat widgets per finding type, severity filters, expandable rows with evidence quotes, potential owners, and doc paths that open the file in the editor.</li>
-    <li><strong>Markdown report</strong> — run <em>Docgrity: Open findings report (markdown)</em> for a plain-text report — summary table, severity, confidence, files, potential owners, and evidence quotes — that you can save or share.</li>
+    <li><code>docgrity.mode</code>: <strong><code>report-and-issue</code></strong> (default) or <strong><code>report-only</code></strong> — issue-raising hidden and blocked at command level. Set <code>report-only</code> globally, override per-workspace where you want to act.</li>
+    <li><code>docgrity.checks.*</code>: duplicates, contradictions and open questions are independent toggles — fewer checks, fewer model calls, faster scans.</li>
+    <li><strong>Results land in four places</strong>: the Docgrity activity-bar view, the Problems panel, the interactive dashboard (<em>Open findings dashboard</em>) and a shareable markdown report.</li>
+    <li><strong>Potential owners</strong> come from the last git author of each file — always labelled <em>potential</em>, never auto-assigned.</li>
   </ul>
 
-  <h2>Potential owners</h2>
-  <p>Docgrity suggests who might fix a finding by looking at the last git author of each involved file. This is always labelled <em>potential</em> — inferred, never asserted. It never assigns issues automatically.</p>
+  <h2 id="models">Choosing your model</h2>
+  <p>Easiest: run <strong><em>Docgrity: Select AI model</em></strong> from the command palette. Manual:
+  <code>docgrity.model.vendor</code> / <code>docgrity.model.family</code>.</p>
+  <table>
+    <tr><th>Option</th><th>Setup</th><th>Privacy</th></tr>
+    <tr><td><strong>GitHub Copilot</strong> (default)</td><td>Sign in — nothing to configure. Any model in Copilot's picker (Claude, GPT, Gemini) works.</td><td>Your Copilot subscription's terms</td></tr>
+    <tr><td><strong>Local Ollama</strong></td><td><code>ollama pull llama3.1</code>, then Copilot Chat → <em>Manage models</em> → add it; select with <em>Select AI model</em>.</td><td><strong>Nothing leaves your machine</strong></td></tr>
+    <tr><td><strong>Remote Ollama</strong></td><td><code>cloudflared tunnel --url http://localhost:11434</code>, point <em>Manage models</em> at the tunnel URL. Quick tunnels change URL on restart — use a named tunnel + Cloudflare Access for stability and safety.</td><td>Your own infra</td></tr>
+    <tr><td><strong>Other extensions</strong></td><td>Any extension registering <code>vscode.lm</code> models — set its vendor id.</td><td>Per provider</td></tr>
+  </table>
 
-  <h2 id="models">Choosing your model — Copilot, Claude, GPT, or local llama</h2>
-  <p>Docgrity talks to whatever model VS Code's language-model API (<code>vscode.lm</code>) exposes.
-  The easiest way to switch: run <strong><em>Docgrity: Select AI model</em></strong> from the command
-  palette — it lists every available model and saves your choice. Manual settings:
-  <code>docgrity.model.vendor</code> (default <code>copilot</code>) and
-  <code>docgrity.model.family</code> (e.g. <code>gpt-4o</code>, <code>claude-sonnet-4.5</code>,
-  <code>llama3.1</code>; empty = first available).</p>
-
-  <p>Options, in order of simplicity:</p>
-  <ol>
-    <li><strong>GitHub Copilot (default).</strong> Sign in to Copilot — nothing to configure. Uses whichever Copilot model you have access to.</li>
-    <li><strong>Claude / GPT / Gemini via Copilot.</strong> Any model enabled in Copilot's model picker is available to Docgrity — pick it with <em>Select AI model</em> or set <code>docgrity.model.family</code>.</li>
-    <li id="local-models"><strong>Local Ollama — fully private.</strong> Install <a href="https://ollama.com">Ollama</a>, pull a model (<code>ollama pull llama3.1</code>), then in Copilot Chat → <em>Manage models</em> → add the Ollama model. It registers under the <code>copilot</code> vendor; select it with <em>Select AI model</em>. With a local model, <strong>no document content leaves your machine at all</strong>.</li>
-    <li><strong>Remote Ollama over a Cloudflare Tunnel.</strong> If your model runs on another machine (home server, GPU rig), expose it with:
-      <pre>cloudflared tunnel --url http://localhost:11434</pre>
-      and point Copilot's <em>Manage models</em> → Ollama endpoint at the generated <code>https://….trycloudflare.com</code> URL.
-      <br><strong>Caveats:</strong> quick tunnels get a <em>new URL on every restart</em> — you must update the endpoint each time. For a stable URL, create a <em>named tunnel</em> on your own domain (<code>cloudflared tunnel create docgrity-llm</code> + a DNS route), and protect it with Cloudflare Access or an auth proxy — an unauthenticated LLM endpoint on the public internet can be abused by anyone who finds it.</li>
-    <li><strong>Other provider extensions.</strong> Any VS Code extension that registers language models works: set <code>docgrity.model.vendor</code> to that provider's vendor id, or empty for "any available model".</li>
-  </ol>
-
-  <h3 id="providers-cli">Models outside the editor — CLI and GitHub Action</h3>
-  <p>Copilot models are only available <em>inside VS Code</em> (there is no Copilot API key for
-  terminals or CI). The CLI and Action use direct providers instead:</p>
-  <ul>
-    <li><strong><code>ollama</code> (CLI default)</strong> — local or tunnelled, no key, fully private.</li>
-    <li><strong><code>anthropic</code> / <code>openai</code> / <code>gemini</code></strong> — bring your own API key
-      (defaults: <code>claude-3-5-haiku-latest</code>, <code>gpt-4o-mini</code>, <code>gemini-flash</code>). These are the
-      vendors' direct APIs — a separate key from your Copilot subscription. In the Action, pass it as
-      <code>api_key: ${{ secrets.DOCGRITY_API_KEY }}</code>.</li>
-    <li><strong><code>github-models</code></strong> — <em>being retired by GitHub.</em> If your Action runs fail with
-      HTTP 410 (<code>github_models_retirement</code>), switch <code>provider</code> to one of the options above.</li>
-  </ul>
-  <p>Summary: <strong>Copilot (keyless) in the editor · Ollama (keyless) everywhere · BYO key for hosted
-  models in CI and the CLI.</strong></p>
+  <h3 id="providers-cli">Outside the editor — CLI &amp; Action</h3>
+  <p>Copilot only exists inside VS Code, so the CLI/Action use direct providers:
+  <strong><code>ollama</code></strong> (default, keyless, private) · <strong><code>anthropic</code> / <code>openai</code> / <code>gemini</code></strong>
+  (BYO key: <code>api_key: ${{ secrets.DOCGRITY_API_KEY }}</code>) · <strong><code>github-models</code></strong>
+  (<em>retiring</em> — on HTTP 410, switch provider). Summary: <strong>Copilot keyless in the editor ·
+  Ollama keyless everywhere · BYO key for hosted models in CI.</strong></p>
 
   <h3 id="no-agent">No-agent mode — no AI at all</h3>
-  <p>Every surface can also scan with <strong>pure algorithms</strong> — no model, no Copilot, no keys,
-  fully offline. Extension: set <code>docgrity.engine</code> to <code>no-agent</code>. CLI:
+  <p>Pure algorithms, fully offline. Extension: <code>docgrity.engine: no-agent</code>. CLI:
   <code>docgrity scan --provider none</code>. Action: <code>provider: none</code>.</p>
-  <ul>
-    <li><strong>Duplicates</strong> — verbatim shared-block detection plus TF-IDF similarity. Catches
-      copy-paste duplication with measured confidence (the actual overlap ratio); paraphrased
-      duplication needs AI.</li>
-    <li><strong>Open questions</strong> — explicit markers (<code>TODO</code>, <code>TBD</code>,
-      <code>FIXME</code>, <code>???</code>, "open question"…). Deterministic, so confidence is high.</li>
-    <li><strong>Contradictions</strong> — <em>require AI intelligence</em>: deciding that two documents
-      make conflicting claims is semantic understanding, not pattern matching. In no-agent mode this
-      check is <strong>skipped and clearly noted</strong> in the report — Docgrity never substitutes
-      noisy heuristic guesses.</li>
-  </ul>
-  <p>Evidence stays verbatim (extracted directly from the docs), owners still come from git history,
-  and findings are marked <code>method: heuristic</code> so you always know how they were produced.
-  Confidence is shown on every surface — Problems-view squiggles, the findings tree, HTML and
-  markdown reports, CLI output, and issue bodies — so you can always judge how sure a finding is.</p>
+  <table>
+    <tr><th>Check</th><th>No-agent behaviour</th></tr>
+    <tr><td>Duplicates</td><td>Verbatim shared-block detection + TF-IDF. Confidence is <em>measured</em> (actual overlap); paraphrased duplication needs AI.</td></tr>
+    <tr><td>Open questions</td><td>Explicit markers (<code>TODO</code>, <code>TBD</code>, <code>FIXME</code>, <code>???</code>, "open question"…) — deterministic, high confidence.</td></tr>
+    <tr><td>Contradictions</td><td><strong>Require AI intelligence</strong> — skipped and clearly noted. Never guessed at heuristically.</td></tr>
+  </table>
+  <p>Evidence stays verbatim, owners come from git history, findings are marked
+  <code>method: heuristic</code>, and confidence is shown on every surface — squiggles, tree,
+  reports, CLI output and issue bodies.</p>
+  <p><strong>Model quality note:</strong> prompts demand strict JSON with verbatim evidence. Small
+  local models (&lt;8B) fail validation more often — failed responses are <em>rejected safely</em>:
+  fewer findings, never corrupted ones. Recommended local minimum: <code>llama3.1:8b</code>.</p>
 
-  <p><strong>Model quality note:</strong> Docgrity's prompts demand strict JSON with verbatim evidence.
-  Hosted frontier models handle this reliably; small local models (&lt;8B) fail validation more often.
-  Failed responses are <em>rejected safely</em> — you get fewer findings, never corrupted ones.
-  Recommended local minimum: an 8B+ instruct model (e.g. <code>llama3.1:8b</code>); 70B-class or hosted
-  models give noticeably better contradiction detection.</p>
-
-  <h2>Cost &amp; performance</h2>
+  <h2>Cost, security &amp; troubleshooting</h2>
   <ul>
-    <li>Pair selection is 100% local — the model is only called for the top pairs and per-doc open-question checks.</li>
-    <li>Duplicate + contradiction share one model call per pair; documents with no open-question signals are pre-filtered before any model call; assessments run with bounded concurrency (4 at a time).</li>
-    <li>Caps (<code>docgrity.maxFiles</code>, <code>docgrity.maxPairs</code>) keep a scan to a bounded number of model calls, and disabling checks you don't need (<code>docgrity.checks.*</code>) cuts calls further.</li>
-    <li>Scans are cancellable; partial results are kept.</li>
-  </ul>
-
-  <h2>Security posture</h2>
-  <ul>
-    <li>Document content is treated as <strong>untrusted input</strong>: it cannot override the agent instructions, and all model output is schema-validated in code.</li>
-    <li>Evidence is verified verbatim against source files before a finding is recorded.</li>
-    <li>GitHub tokens come from VS Code's authentication API, are used only for the issue-creation request you approved, and are never logged or stored.</li>
-    <li>Git commands are read-only (<code>git log</code>, <code>git remote get-url</code>), executed without a shell.</li>
-    <li>No telemetry, no vendor servers, no data collection. See the <a href="privacy.html">privacy policy</a>.</li>
-  </ul>
-
-  <h2>Troubleshooting</h2>
-  <ul>
-    <li><strong>“No language model available”</strong> — sign in to GitHub Copilot, or configure <code>docgrity.model.vendor</code>/<code>family</code> for a local model.</li>
-    <li><strong>No findings</strong> — your docs may simply agree with each other; try lowering <code>docgrity.thresholds.*</code>, or check the corpus caps.</li>
-    <li><strong>Clicking a finding does nothing</strong> — update to the latest version; findings and evidence rows open the exact excerpt in the file. Results also appear in the Problems panel and via <em>Docgrity: Open findings report</em>.</li>
-    <li><strong>Scanning unwanted files</strong> — <code>node_modules</code>, build output, and git-ignored files are always excluded (v0.1.2+); add extra patterns with <code>docgrity.exclude</code>.</li>
-    <li><strong>Logs</strong> — Output panel → <em>Docgrity</em> channel. Use <em>Developer: Set Log Level</em> for more detail. Logs never contain document content or tokens.</li>
+    <li><strong>Bounded cost</strong> — pair selection is local; caps (<code>maxFiles</code>/<code>maxPairs</code>) bound model calls; shared calls per pair; scans are cancellable with partial results kept.</li>
+    <li><strong>Untrusted input</strong> — doc content can't override agent instructions; all model output is schema-validated; evidence verified verbatim before recording.</li>
+    <li><strong>Tokens &amp; git</strong> — GitHub tokens come from VS Code auth, used only for approved issue posts, never logged. Git commands are read-only, no shell.</li>
+    <li><strong>No telemetry, no servers.</strong> See the <a href="privacy.html">privacy policy</a>.</li>
+    <li><strong>“No language model available”</strong> — sign in to Copilot or configure <code>docgrity.model.*</code>; <strong>no findings</strong> — lower <code>docgrity.thresholds.*</code>; <strong>logs</strong> — Output panel → <em>Docgrity</em> (never contains doc content or tokens).</li>
   </ul>
 
   <p style="margin-top:2em"><a href="index.html">← Back to home</a></p>
